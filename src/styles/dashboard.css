@@ -1,0 +1,42 @@
+/* Overall layout structure */
+.dashboard-layout {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Top navbar styling (assumes 56px height) */
+.layout-body {
+  display: flex;
+  margin-top: 56px; /* Adjust if your Navbar is taller */
+}
+
+/* Sidebar will already be fixed (from your sidebar.css) */
+
+/* Main Content beside sidebar */
+.main-content {
+  flex-grow: 1;
+  margin-left: 250px; /* Same as your sidebar width */
+  padding: 20px;
+  min-height: calc(100vh - 56px);
+  background-color: var(--bs-body-bg);
+  transition: margin-left 0.3s ease;
+}
+
+/* Adjust for collapsed sidebar */
+.sidebar.collapsed + .main-content {
+  margin-left: 80px;
+}
+
+.content-wrapper {
+  background: var(--bs-body-bg);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Sidebar Collapse */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 80px;
+  }
+}
