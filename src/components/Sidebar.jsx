@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   FaHome, FaUserMd, FaNotesMedical, FaUserPlus,
   FaCalendarCheck, FaFileInvoiceDollar, FaBars,
-  FaCog, FaSignOutAlt, FaMoon, FaSun,
+  FaSignOutAlt, FaMoon, FaSun,
 } from "react-icons/fa";
 import { clearUser } from "../redux/authSlice";
 import "../styles/sidebar.css";
@@ -20,12 +20,11 @@ const Sidebar = () => {
   const [darkMode, setDarkMode] = useState(
     document.documentElement.getAttribute("data-bs-theme") === "dark"
   );
-  const [showSettings, setShowSettings] = useState(false);
 
-  // Collapse sidebar on window resize
+  // Collapse on small screens
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth <= 768) setCollapsed(true);
+      setCollapsed(window.innerWidth <= 768);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -78,14 +77,14 @@ const Sidebar = () => {
 
   return (
     <div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
-      {/* Sidebar Header */}
+      {/* Header with toggle */}
       <div className="sidebar-header">
         <button className="toggle-btn" onClick={() => setCollapsed(!collapsed)}>
           <FaBars />
         </button>
       </div>
 
-      {/* Sidebar Content */}
+      {/* Main Links */}
       <div className="sidebar-content">
         <ul className="sidebar-links">
           {links.map((link, index) => (
@@ -96,32 +95,11 @@ const Sidebar = () => {
               </Link>
             </li>
           ))}
-
-          {/* Settings */}
-          <li className="settings-section">
-            <div
-              className="settings-header"
-              onClick={() => setShowSettings(!showSettings)}
-            >
-              <FaCog />
-              <span className="link-text">{!collapsed && "Settings"}</span>
-            </div>
-
-            <div className={`settings-collapse ${showSettings ? "show" : ""}`}>
-              <div className="settings-option" onClick={toggleTheme}>
-                <span className={`theme-icon ${darkMode ? "rotate" : ""}`}>
-                  {darkMode ? <FaSun /> : <FaMoon />}
-                </span>
-                <span className="link-text">{!collapsed && (darkMode ? "Light Mode" : "Dark Mode")}</span>
-              </div>
-              <div className="settings-option" onClick={handleLogout}>
-                <FaSignOutAlt />
-                <span className="link-text">{!collapsed && "Logout"}</span>
-              </div>
-            </div>
-          </li>
         </ul>
       </div>
+
+      {/* Bottom Buttons */}
+     
     </div>
   );
 };

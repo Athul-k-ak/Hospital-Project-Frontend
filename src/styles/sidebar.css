@@ -4,7 +4,7 @@
   top: 59px;
   left: 0;
   width: 220px; /* Reduced from 250px */
-  height: calc(100vh - 56px);
+  min-height: 100vh;
   background: #173d7a;
   color: white;
   display: flex;
@@ -81,6 +81,13 @@
   min-height: 36px; /* Reduced from 40px */
 }
 
+/* Ensure icons remain properly sized */
+.sidebar .sidebar-links svg,
+.sidebar .settings-section svg {
+  font-size: 1.2rem;
+  min-width: 20px;
+}
+
 /* Active State */
 .sidebar-links li.active {
   background: rgba(255, 255, 255, 0.2);
@@ -114,7 +121,7 @@
 /* Responsive Collapse */
 @media (max-width: 768px) {
   .sidebar {
-    width: 70px; /* Match collapsed width */
+    width: 70px;
   }
 
   .sidebar .link-text {
@@ -128,7 +135,7 @@
 /* Settings Section */
 .settings-section {
   margin-top: auto;
-  padding-top: 8px; /* Slightly reduced */
+  padding-top: 8px;
   border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -136,8 +143,8 @@
 .settings-option {
   display: flex;
   align-items: center;
-  padding: 10px 15px; /* Reduced from 12px 20px */
-  gap: 8px; /* Reduced from 10px */
+  padding: 10px 15px;
+  gap: 8px;
   color: white;
   cursor: pointer;
   transition: background 0.3s;
@@ -173,7 +180,35 @@
 .theme-icon {
   display: inline-block;
   transition: transform 0.5s ease;
+  font-size: 1.2rem;
+  min-width: 20px;
 }
 .theme-icon.rotate {
   transform: rotate(180deg);
+}
+/* Bottom Buttons */
+.sidebar-bottom {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 15px;
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-btn {
+  background: none;
+  border: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+  width: 100%;
+}
+
+.sidebar-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
 }

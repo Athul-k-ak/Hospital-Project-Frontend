@@ -1,0 +1,14 @@
+.register-page {
+    /* background: linear-gradient(135deg, #212529, #343a40); */
+    min-height: 100vh;
+  }
+  
+  .register-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  }
+  
+  .register-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+  }
