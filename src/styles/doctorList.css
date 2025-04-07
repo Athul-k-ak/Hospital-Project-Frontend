@@ -1,0 +1,23 @@
+.doctor-list table {
+    font-size: 15px;
+  }
+  
+  .doctor-list th,
+  .doctor-list td {
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  
+  .doctor-list h3 {
+    font-weight: 600;
+    color: var(--bs-primary);
+  }
+  .doctor-list input.form-control {
+    border-radius: 6px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+  }
+  .doctor-row:hover {
+    background-color: #f5f5f5;
+  }
+  

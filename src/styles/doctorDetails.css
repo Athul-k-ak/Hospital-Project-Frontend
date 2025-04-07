@@ -1,0 +1,9 @@
+.doctor-details .btn {
+    transition: 0.3s ease;
+  }
+  
+  .doctor-details .btn:hover {
+    background-color: #444;
+    color: #fff;
+  }
+  

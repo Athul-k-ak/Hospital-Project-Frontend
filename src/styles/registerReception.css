@@ -1,0 +1,43 @@
+.register-reception-container {
+    min-height: 100vh;
+    background: linear-gradient(to right, #f7f8fc, #e3e8f0);
+  }
+  
+  .register-reception-card {
+    background-color: var(--bs-body-bg);
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .profile-preview {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #dee2e6;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Floating Labels */
+  .floating-label {
+    position: relative;
+  }
+  
+  .floating-label input:focus ~ label,
+  .floating-label input:not(:placeholder-shown) ~ label {
+    transform: translateY(-1.2rem);
+    font-size: 0.8rem;
+    color: #0d6efd;
+  }
+  
+  .floating-label label {
+    position: absolute;
+    top: 50%;
+    left: 0.75rem;
+    transform: translateY(-50%);
+    transition: all 0.2s ease-in-out;
+    pointer-events: none;
+    color: #6c757d;
+    background-color: var(--bs-body-bg);
+    padding: 0 0.25rem;
+  }
+  

@@ -1,0 +1,62 @@
+/* General container setup */
+.register-admin-container {
+    min-height: 100vh;
+    background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  
+  /* Form card styling */
+  .register-admin-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  /* Floating label effect */
+  .floating-label {
+    position: relative;
+  }
+  
+  .floating-label input:focus + label,
+  .floating-label input:not(:placeholder-shown) + label {
+    transform: translateY(-22px);
+    font-size: 0.8rem;
+    color: #0d6efd;
+  }
+  
+  .floating-label label {
+    position: absolute;
+    left: 15px;
+    top: 10px;
+    padding: 0 5px;
+    background: white;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    font-weight: 500;
+    color: #6c757d;
+  }
+  
+  /* Profile image preview */
+  .profile-preview {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #0d6efd;
+    transition: transform 0.3s ease;
+  }
+  
+  .profile-preview:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Animation - optional with animate.css */
+  @import "https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css";
+  

@@ -1,0 +1,15 @@
+.register-doctor-page {
+    background-color: var(--bs-body-bg);
+    border-radius: 8px;
+    max-width: 1000px;
+    margin: auto;
+  }
+  
+  .register-doctor-page label {
+    font-weight: 500;
+  }
+  
+  .form-check-label {
+    margin-left: 0.25rem;
+  }
+  

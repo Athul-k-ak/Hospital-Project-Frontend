@@ -26,7 +26,7 @@ const Appointment = () => {
       title: "View All Appointments",
       desc: "See the list of all scheduled appointments.",
       btnText: "View All",
-      route: `${baseRoute}/appointment/all`,
+      route: `${baseRoute}/view-appointments`,
       color: "success",
     },
     {
