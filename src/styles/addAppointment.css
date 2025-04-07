@@ -1,0 +1,15 @@
+.add-appointment h3 {
+    color: var(--bs-primary);
+    font-weight: 600;
+  }
+  
+  .add-appointment label {
+    font-weight: 500;
+  }
+  .appointment-summary {
+    background-color: #f9fdfb;
+    border-left: 5px solid #28a745;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  

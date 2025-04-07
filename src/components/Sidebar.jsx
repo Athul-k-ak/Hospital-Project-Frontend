@@ -39,6 +39,7 @@ const Sidebar = () => {
     { path: "/admin/register", label: "Register", icon: <FaUserPlus /> },
     { path: "/admin/patient-register", label: "Patient Register", icon: <FaUserMd /> },
     { path: "/admin/patient-list", label: "Patient List", icon: <FaNotesMedical /> },
+    { path: "/admin/doctor-list", label: "Doctor List", icon: <FaUserMd /> },
     { path: "/admin/patient-report", label: "Patient Report", icon: <FaFileInvoiceDollar /> },
     { path: "/admin/appointment", label: "Appointments", icon: <FaCalendarCheck /> },
     { path: "/admin/billing", label: "Billing", icon: <FaFileInvoiceDollar /> },
@@ -48,6 +49,7 @@ const Sidebar = () => {
     { path: "/reception-dashboard", label: "Home", icon: <FaHome /> },
     { path: "/reception/patient-register", label: "Patient Register", icon: <FaUserMd /> },
     { path: "/reception/patient-list", label: "Patient List", icon: <FaNotesMedical /> },
+    { path: "/reception/doctor-list", label: "Doctor List", icon: <FaUserMd /> },
     { path: "/reception/appointment", label: "Appointments", icon: <FaCalendarCheck /> },
     { path: "/reception/billing", label: "Billing", icon: <FaFileInvoiceDollar /> },
   ];
