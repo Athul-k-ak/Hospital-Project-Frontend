@@ -51,12 +51,15 @@ const Sidebar = () => {
     { path: "/reception/patient-list", label: "Patient List", icon: <FaNotesMedical /> },
     { path: "/reception/doctor-list", label: "Doctor List", icon: <FaUserMd /> },
     { path: "/reception/appointment", label: "Appointments", icon: <FaCalendarCheck /> },
+    { path: "/reception/patient-report", label: "Patient Report", icon: <FaFileInvoiceDollar /> },
     { path: "/reception/billing", label: "Billing", icon: <FaFileInvoiceDollar /> },
+
+
   ];
 
   const doctorLinks = [
     { path: "/doctor-dashboard", label: "Home", icon: <FaHome /> },
-    { path: "/doctor/appointment", label: "Appointments", icon: <FaCalendarCheck /> },
+    { path: "/doctor/appointments", label: "My Appointments", icon: <FaCalendarCheck /> },
     { path: "/doctor/patient-reports", label: "Patient Reports", icon: <FaNotesMedical /> },
   ];
 

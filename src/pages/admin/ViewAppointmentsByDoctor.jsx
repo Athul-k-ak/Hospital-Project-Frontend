@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, Table, Spinner, Alert, Badge } from "react-bootstrap";
-import axiosInstance from "../utils/axiosInstance"; // ✅ Use custom Axios instance
-import DashboardLayout from "../components/DashboardLayout";
+import axiosInstance from "../../utils/axiosInstance"; // ✅ Use custom Axios instance
+import DashboardLayout from "../../components/DashboardLayout";
 
 const ViewAppointmentsByDoctor = () => {
   const [appointments, setAppointments] = useState([]);

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import axios from "../utils/axiosInstance";
+import axios from "../../utils/axiosInstance";
 import { Spinner, Table, Alert, Container } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import DashboardLayout from "../components/DashboardLayout";
+import DashboardLayout from "../../components/DashboardLayout";
 
 const ViewAppointments = () => {
   const [appointments, setAppointments] = useState([]);

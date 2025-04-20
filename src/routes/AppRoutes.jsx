@@ -11,22 +11,25 @@ import DoctorDashboard from "../pages/doctor/DoctorDashboard";
 import ReceptionDashboard from "../pages/reception/ReceptionDashboard";
 
 // 📝 Common Pages
-import PatientList from "../pages/PatientList";
-import PatientRegister from "../pages/PatientRegister";
-import AdminAppointment from "../pages/Appointment";
-import AddAppointment from "../pages/AddAppointment";
-import ViewAppointments from "../pages/ViewAppointments";
-
+import PatientList from "../pages/admin/PatientList";
+import PatientRegister from "../pages/admin/PatientRegister";
+import AdminAppointment from "../pages/admin/Appointment";
+import AddAppointment from "../pages/admin/AddAppointment";
+import ViewAppointments from "../pages/admin/ViewAppointments";
 
 // 🧑‍💼 Admin Pages
 import Register from "../pages/admin/Register";
-import DoctorList from "../pages/DoctorList";
-import DoctorDetails from "../pages/DoctorDetails";
+import DoctorList from "../pages/admin/DoctorList";
+import DoctorDetails from "../pages/admin/DoctorDetails";
 import RegisterAdmin from "../pages/register/RegisterAdmin";
 import RegisterReception from "../pages/register/RegisterReception";
 import RegisterDoctor from "../pages/register/RegisterDoctor";
 import RegisterStaff from "../pages/register/RegisterStaff";
-import ViewAppointmentsByDoctor from "../pages/ViewAppointmentsByDoctor";
+import ViewAppointmentsByDoctor from "../pages/admin/ViewAppointmentsByDoctor";
+
+// 🩺 Doctor Pages
+import MyAppointments from "../pages/doctor/MyAppointments";
+import PatientReport from "../pages/PatientReport";
 
 // 🔐 Protected Route Wrapper
 const ProtectedRoute = ({ element, role }) => {
@@ -52,7 +55,7 @@ const AppRoutes = () => {
     { path: "/admin/register-staff", element: <RegisterStaff /> },
     { path: "/admin/view-appointments", element: <ViewAppointments /> },
     { path: "/admin/appointment/by-doctor", element: <ViewAppointmentsByDoctor /> },
-
+    { path: "/admin/patient-report", element: <PatientReport /> },
   ];
 
   const receptionRoutes = [
@@ -64,6 +67,14 @@ const AppRoutes = () => {
     { path: "/reception/doctor-list", element: <DoctorList /> },
     { path: "/reception/doctor-details/:id", element: <DoctorDetails /> },
     { path: "/reception/view-appointments", element: <ViewAppointments /> },
+    { path: "/reception/patient-report", element: <PatientReport/> },
+
+  ];
+
+  const doctorRoutes = [
+    { path: "/doctor-dashboard", element: <DoctorDashboard /> },
+    { path: "/doctor/appointments", element: <MyAppointments /> },
+    { path: "/doctor/patient-reports", element: <PatientReport /> },
   ];
 
   return (
@@ -91,11 +102,14 @@ const AppRoutes = () => {
           />
         ))}
 
-        {/* 🩺 Doctor Route */}
-        <Route
-          path="/doctor-dashboard"
-          element={<ProtectedRoute element={<DoctorDashboard />} role="doctor" />}
-        />
+        {/* 🩺 Doctor Routes */}
+        {doctorRoutes.map((route, index) => (
+          <Route
+            key={`doctor-${index}`}
+            path={route.path}
+            element={<ProtectedRoute element={route.element} role="doctor" />}
+          />
+        ))}
 
         {/* ✅ Shared Route (Admin + Reception) */}
         <Route

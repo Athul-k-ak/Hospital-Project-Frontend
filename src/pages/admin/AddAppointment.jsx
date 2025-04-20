@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import axiosInstance from "../utils/axiosInstance";
+import axiosInstance from "../../utils/axiosInstance";
 import { toast } from "react-toastify";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import "../styles/AddAppointment.css";
-import DashboardLayout from "../components/DashboardLayout";
+import "../../styles/AddAppointment.css";
+import DashboardLayout from "../../components/DashboardLayout";
 
 const dayMap = {
   Sunday: 0,
