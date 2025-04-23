@@ -29,7 +29,15 @@ import ViewAppointmentsByDoctor from "../pages/admin/ViewAppointmentsByDoctor";
 
 // 🩺 Doctor Pages
 import MyAppointments from "../pages/doctor/MyAppointments";
-import PatientReport from "../pages/PatientReport";
+import PatientReport from "../pages/patient report/PatientReport";
+import AddPatientReport from "../pages/patient report/AddPatientReport";
+import ViewReportsPage from "../pages/patient report/ViewReportsPage";
+import PatientReportView from "../pages/patient report/PatientReportView";
+
+// 💵 Billing Pages
+import Billing from "../pages/Billing";
+import AddBilling from "../pages/AddBilling";
+import PaymentPage from "../pages/PaymentPage"; // 👈 new page
 
 // 🔐 Protected Route Wrapper
 const ProtectedRoute = ({ element, role }) => {
@@ -56,6 +64,13 @@ const AppRoutes = () => {
     { path: "/admin/view-appointments", element: <ViewAppointments /> },
     { path: "/admin/appointment/by-doctor", element: <ViewAppointmentsByDoctor /> },
     { path: "/admin/patient-report", element: <PatientReport /> },
+    { path: "/admin/patientreport/add", element: <AddPatientReport /> },
+    { path: "/admin/patientreport/view", element: <ViewReportsPage /> },
+    { path: "/admin/patientreport/patients/list", element: <ViewReportsPage /> },
+    { path: "/admin/patientreport/:patientId", element: <PatientReportView /> },
+    { path: "/admin/billing", element: <Billing /> },
+    { path: "/admin/billing/create", element: <AddBilling /> },
+    { path: "/admin/billing/payment/:id", element: <PaymentPage /> }, // 👈 Payment route
   ];
 
   const receptionRoutes = [
@@ -67,14 +82,19 @@ const AppRoutes = () => {
     { path: "/reception/doctor-list", element: <DoctorList /> },
     { path: "/reception/doctor-details/:id", element: <DoctorDetails /> },
     { path: "/reception/view-appointments", element: <ViewAppointments /> },
-    { path: "/reception/patient-report", element: <PatientReport/> },
-
+    { path: "/reception/patient-report", element: <PatientReport /> },
+    { path: "/reception/billing", element: <Billing /> },
+    { path: "/reception/billing/create", element: <AddBilling /> },
+    { path: "/reception/billing/:id", element: <PaymentPage /> }, // 👈 Payment route
   ];
 
   const doctorRoutes = [
     { path: "/doctor-dashboard", element: <DoctorDashboard /> },
     { path: "/doctor/appointments", element: <MyAppointments /> },
     { path: "/doctor/patient-reports", element: <PatientReport /> },
+    { path: "/doctor/patientreport/add", element: <AddPatientReport /> },
+    { path: "/doctor/patientreport/patients/list", element: <ViewReportsPage /> },
+    { path: "/doctor/patientreport/:patientId", element: <PatientReportView /> },
   ];
 
   return (

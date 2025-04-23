@@ -3,41 +3,42 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import DashboardLayout from "../components/DashboardLayout";
 
-
-const PatientReport = () => {
+const GeneralBilling = () => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
 
-  const role = user?.role;
+  if (!user) {
+    return (
+      <DashboardLayout>
+        <div className="container py-4">
+          <h4>Loading...</h4>
+        </div>
+      </DashboardLayout>
+    );
+  }
 
-  // Redirect base route based on role
+  const role = user.role;
   const baseRoute =
     role === "admin" ? "/admin" :
-    role === "doctor" ? "/doctor" :
     role === "reception" ? "/reception" :
     "/";
 
-  // Define cards conditionally
   const cards = [];
 
-  // Add Report — only for Admin & Doctor
-  if (role === "admin" || role === "doctor") {
+  if (role === "admin" || role === "reception") {
     cards.push({
-      title: "Add Patient Report",
-      desc: "Create a medical report for a patient with diagnosis and treatment.",
-      btnText: "Add Report",
-      route: `${baseRoute}/patient-report/add`,
+      title: "Create New Bill",
+      desc: "Generate billing records for patients and appointments.",
+      btnText: "Create Bill",
+      route: `${baseRoute}/billing/create`,
       color: "primary",
     });
-  }
 
-  // View Report — for Admin, Doctor, Reception
-  if (["admin", "doctor", "reception"].includes(role)) {
     cards.push({
-      title: "View Patient Reports",
-      desc: "View existing patient reports with filters and search.",
-      btnText: "View Reports",
-      route: `${baseRoute}/patient-report/view`,
+      title: "View Billing Records",
+      desc: "Check and manage all patient billing history.",
+      btnText: "View Bills",
+      route: `${baseRoute}/billing/records`,
       color: "success",
     });
   }
@@ -45,7 +46,7 @@ const PatientReport = () => {
   return (
     <DashboardLayout>
       <div className="container py-4">
-        <h3 className="mb-4">Patient Report Management</h3>
+        <h3 className="mb-4">Billing Management</h3>
         <div className="row g-4">
           {cards.map((card, index) => (
             <div className="col-md-6" key={index}>
@@ -69,4 +70,4 @@ const PatientReport = () => {
   );
 };
 
-export default PatientReport;
+export default GeneralBilling;
