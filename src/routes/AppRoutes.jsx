@@ -37,7 +37,8 @@ import PatientReportView from "../pages/patient report/PatientReportView";
 // 💵 Billing Pages
 import Billing from "../pages/Billing";
 import AddBilling from "../pages/AddBilling";
-import PaymentPage from "../pages/PaymentPage"; // 👈 new page
+
+
 
 // 🔐 Protected Route Wrapper
 const ProtectedRoute = ({ element, role }) => {
@@ -70,8 +71,7 @@ const AppRoutes = () => {
     { path: "/admin/patientreport/:patientId", element: <PatientReportView /> },
     { path: "/admin/billing", element: <Billing /> },
     { path: "/admin/billing/create", element: <AddBilling /> },
-    { path: "/admin/billing/payment/:id", element: <PaymentPage /> }, // 👈 Payment route
-  ];
+ ];
 
   const receptionRoutes = [
     { path: "/reception-dashboard", element: <ReceptionDashboard /> },
@@ -85,7 +85,8 @@ const AppRoutes = () => {
     { path: "/reception/patient-report", element: <PatientReport /> },
     { path: "/reception/billing", element: <Billing /> },
     { path: "/reception/billing/create", element: <AddBilling /> },
-    { path: "/reception/billing/:id", element: <PaymentPage /> }, // 👈 Payment route
+
+
   ];
 
   const doctorRoutes = [

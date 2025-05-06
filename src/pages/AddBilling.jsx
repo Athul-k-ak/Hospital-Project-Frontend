@@ -25,14 +25,32 @@ const AddBilling = () => {
           axiosInstance.get("/appointment"),
         ]);
 
-        const patientData = patientRes.data.patients || [];
-        const appointmentData = appointmentRes.data.appointments || [];
+        // Log raw response
+        console.log("Patient response:", patientRes.data);
+        console.log("Appointment response:", appointmentRes.data);
 
-        setPatients(patientData);
-        setAppointments(appointmentData);
+        // Safely extract data
+        const patientData =
+          Array.isArray(patientRes.data.patients)
+            ? patientRes.data.patients
+            : Array.isArray(patientRes.data)
+            ? patientRes.data
+            : [];
+
+        const appointmentData =
+          Array.isArray(appointmentRes.data.appointments)
+            ? appointmentRes.data.appointments
+            : Array.isArray(appointmentRes.data)
+            ? appointmentRes.data
+            : [];
+
+        setPatients(patientData || []);
+        setAppointments(appointmentData || []);
       } catch (err) {
-        console.error(err);
+        console.error("Data fetch error:", err);
         toast.error("Failed to load patients or appointments.");
+        setPatients([]);
+        setAppointments([]);
       } finally {
         setLoading(false);
       }
@@ -49,19 +67,62 @@ const AddBilling = () => {
     }));
   };
 
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    document.body.appendChild(script);
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await axiosInstance.post("/billing/create", formData);
-      const billId = res.data.billing?._id;
+      const billing = res.data.billing;
       toast.success("Billing record created!");
 
-      if (billId) {
-        navigate(`billing/${billingId}`);
-      } else {
-        toast.error("Bill ID not found");
+      if (!billing?._id) {
+        return toast.error("Failed to retrieve billing ID");
       }
+
+      const orderRes = await axiosInstance.post("/payment/order", {
+        billingId: billing._id,
+      });
+
+      const { order } = orderRes.data;
+
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: order.amount,
+        currency: "INR",
+        name: "Hospital Billing",
+        description: formData.details || "Hospital Payment",
+        order_id: order.id,
+        handler: async function (response) {
+          try {
+            await axiosInstance.post("/payment/verify", {
+              billingId: billing._id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            });
+
+            toast.success("Payment successful!");
+            navigate(`/billing/${billing._id}`);
+          } catch (err) {
+            console.error(err);
+            toast.error("Payment verification failed");
+          }
+        },
+        theme: {
+          color: "#0d6efd",
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
     } catch (err) {
+      console.error(err);
       toast.error(err.response?.data?.message || "Error creating billing");
     }
   };
@@ -85,11 +146,15 @@ const AddBilling = () => {
                 required
               >
                 <option value="">Select patient</option>
-                {patients.map((p) => (
-                  <option key={p._id} value={p._id}>
-                    {p.name || p.fullName || "Unnamed"}
-                  </option>
-                ))}
+                {Array.isArray(patients) && patients.length > 0 ? (
+                  patients.map((p) => (
+                    <option key={p._id} value={p._id}>
+                      {p.name || p.fullName || "Unnamed"}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled>No patients found</option>
+                )}
               </select>
             </div>
 
@@ -102,11 +167,15 @@ const AddBilling = () => {
                 onChange={handleChange}
               >
                 <option value="">None</option>
-                {appointments.map((a) => (
-                  <option key={a._id} value={a._id}>
-                    {a.date} - {a.time}
-                  </option>
-                ))}
+                {Array.isArray(appointments) && appointments.length > 0 ? (
+                  appointments.map((a) => (
+                    <option key={a._id} value={a._id}>
+                      {a.date} - {a.time}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled>No appointments found</option>
+                )}
               </select>
             </div>
 

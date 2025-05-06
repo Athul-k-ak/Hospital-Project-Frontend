@@ -10,11 +10,21 @@ const PaymentPage = () => {
   const [bill, setBill] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch bill details on load
+  // Load Razorpay script dynamically
+  const loadScript = (src) =>
+    new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = src;
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+
+  // Fetch bill details on component load
   useEffect(() => {
     const fetchBill = async () => {
       try {
-        const res = await axiosInstance.get(`/billing/${billingId}`);
+        const res = await axiosInstance.get(`/billing/${billId}`);
         setBill(res.data.billing);
       } catch (err) {
         toast.error("Failed to load billing details.");
@@ -25,19 +35,32 @@ const PaymentPage = () => {
     fetchBill();
   }, [billId]);
 
-  // Load Razorpay payment gateway and handle transaction
   const loadRazorpay = async () => {
     if (!bill) return;
 
+    const scriptLoaded = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
+    if (!scriptLoaded) {
+      toast.error("Razorpay SDK failed to load");
+      return;
+    }
+
+    const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
+    console.log("Razorpay Key:", razorpayKey);
+
+    if (!razorpayKey) {
+      toast.error("Razorpay key is missing. Check your .env file.");
+      return;
+    }
+
     try {
       const res = await axiosInstance.post(`/payment/razorpay-order`, {
-        billingId: bill._id, // use correct key expected by backend
+        billingId: bill._id,
       });
 
       const { order } = res.data;
 
       const options = {
-        key: import.meta.env.RAZORPAY_KEY_ID, // from .env
+        key: razorpayKey,
         amount: order.amount,
         currency: order.currency,
         name: "Hospital Payment",
@@ -84,10 +107,19 @@ const PaymentPage = () => {
           <div className="text-center">Loading...</div>
         ) : bill ? (
           <div className="card p-4 shadow rounded-4">
-            <h5 className="mb-3">Patient: <strong>{bill.patient?.name}</strong></h5>
-            <p><strong>Details:</strong> {bill.details}</p>
-            <p><strong>Amount:</strong> ₹{bill.amount}</p>
-            <p><strong>Status:</strong> {bill.paymentStatus === "paid" ? "✅ Paid" : "❌ Not Paid"}</p>
+            <h5 className="mb-3">
+              Patient: <strong>{bill.patient?.name}</strong>
+            </h5>
+            <p>
+              <strong>Details:</strong> {bill.details}
+            </p>
+            <p>
+              <strong>Amount:</strong> ₹{bill.amount}
+            </p>
+            <p>
+              <strong>Status:</strong>{" "}
+              {bill.paymentStatus === "paid" ? "✅ Paid" : "❌ Not Paid"}
+            </p>
 
             {bill.paymentStatus !== "paid" && (
               <button className="btn btn-success mt-3" onClick={loadRazorpay}>
