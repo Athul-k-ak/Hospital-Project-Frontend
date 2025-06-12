@@ -1,113 +1,146 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DashboardLayout from "../../components/DashboardLayout";
+import axios from "../../utils/axiosInstance";
+import { Spinner, Table, Card } from "react-bootstrap";
 import "../../styles/adminDashboard.css";
 
 const AdminDashboard = () => {
+  const [stats, setStats] = useState({
+    totalPatients: 0,
+    totalDoctors: 0,
+    appointmentsToday: 0,
+    monthlyRevenue: 0,
+  });
+
+  const [appointments, setAppointments] = useState([]);
+  const [staff, setStaff] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+
+        const [patientRes, doctorRes, appointmentRes, revenueRes, staffRes] =
+          await Promise.all([
+            axios.get("/dashboard/patients/count"),
+            axios.get("/dashboard/doctors/count"),
+            axios.get("/dashboard/appointments/today"),
+            axios.get("/dashboard/revenue/month"),
+            axios.get("/dashboard/staff/onduty"),
+          ]);
+
+        setStats({
+          totalPatients: patientRes.data.count,
+          totalDoctors: doctorRes.data.count,
+          appointmentsToday: appointmentRes.data.count,
+          monthlyRevenue: revenueRes.data.amount,
+        });
+
+        setAppointments(appointmentRes.data.latest || []);
+        setStaff(staffRes.data || []);
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
   return (
     <DashboardLayout>
       <div className="admin-dashboard container-fluid">
-        <div className="row g-3 mb-4">
-          <div className="col-md-3 col-sm-6">
-            <div className="card stat-card bg-primary text-white">
-              <div className="card-body">
-                <h5 className="card-title">Total Patients</h5>
-                <h3>1,245</h3>
-              </div>
-            </div>
+        {loading ? (
+          <div className="text-center my-5">
+            <Spinner animation="border" variant="primary" />
           </div>
-          <div className="col-md-3 col-sm-6">
-            <div className="card stat-card bg-success text-white">
-              <div className="card-body">
-                <h5 className="card-title">Doctors</h5>
-                <h3>78</h3>
-              </div>
+        ) : (
+          <>
+            <div className="row g-3 mb-4">
+              <StatCard title="Total Patients" value={stats.totalPatients} bg="primary" />
+              <StatCard title="Doctors" value={stats.totalDoctors} bg="success" />
+              <StatCard title="Appointments Today" value={stats.appointmentsToday} bg="warning" text="dark" />
+             
             </div>
-          </div>
-          <div className="col-md-3 col-sm-6">
-            <div className="card stat-card bg-warning text-dark">
-              <div className="card-body">
-                <h5 className="card-title">Appointments Today</h5>
-                <h3>134</h3>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3 col-sm-6">
-            <div className="card stat-card bg-danger text-white">
-              <div className="card-body">
-                <h5 className="card-title">Revenue (This Month)</h5>
-                <h3>₹ 4,50,000</h3>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <div className="row g-3">
-          <div className="col-md-8">
-            <div className="card">
-              <div className="card-header bg-light">
-                <h5 className="mb-0">Recent Appointments</h5>
+            <div className="row g-3">
+              <div className="col-md-8">
+                <Card className="h-100">
+                  <Card.Header className="bg-light">
+                    <h5 className="mb-0">Recent Appointments</h5>
+                  </Card.Header>
+                  <Card.Body className="table-responsive">
+                    <Table hover>
+                      <thead>
+                        <tr>
+                          <th>Patient Name</th>
+                          <th>Doctor</th>
+                          <th>Department</th>
+                          <th>Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {appointments.length > 0 ? (
+                          appointments.map((a, idx) => (
+                            <tr key={idx}>
+                              <td>{a.patientName}</td>
+                              <td>{a.doctorName}</td>
+                              <td>{a.department}</td>
+                              <td>{new Date(a.date).toLocaleDateString()}</td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>
+                            <td colSpan="4" className="text-center">
+                              No appointments found.
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </Table>
+                  </Card.Body>
+                </Card>
               </div>
-              <div className="card-body table-responsive">
-                <table className="table table-hover">
-                  <thead>
-                    <tr>
-                      <th>Patient Name</th>
-                      <th>Doctor</th>
-                      <th>Department</th>
-                      <th>Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>John Doe</td>
-                      <td>Dr. Smith</td>
-                      <td>Cardiology</td>
-                      <td>03-Apr-2025</td>
-                    </tr>
-                    <tr>
-                      <td>Jane Roe</td>
-                      <td>Dr. Arya</td>
-                      <td>Neurology</td>
-                      <td>03-Apr-2025</td>
-                    </tr>
-                    <tr>
-                      <td>Rahul Kumar</td>
-                      <td>Dr. Anjali</td>
-                      <td>Orthopedics</td>
-                      <td>03-Apr-2025</td>
-                    </tr>
-                    <tr>
-                      <td>Sneha Verma</td>
-                      <td>Dr. Iqbal</td>
-                      <td>Pediatrics</td>
-                      <td>03-Apr-2025</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
 
-          <div className="col-md-4">
-            <div className="card">
-              <div className="card-header bg-light">
-                <h5 className="mb-0">Staff On Duty</h5>
-              </div>
-              <div className="card-body">
-                <ul className="list-group list-group-flush">
-                  <li className="list-group-item">Dr. Smith - Cardiology</li>
-                  <li className="list-group-item">Dr. Arya - Neurology</li>
-                  <li className="list-group-item">Nurse Priya - ICU</li>
-                  <li className="list-group-item">Lab Tech Ramesh</li>
-                  <li className="list-group-item">Reception - Anu</li>
-                </ul>
+              <div className="col-md-4">
+                <Card>
+                  <Card.Header className="bg-light">
+                    <h5 className="mb-0">Staff On Duty</h5>
+                  </Card.Header>
+                  <Card.Body>
+                    <ul className="list-group list-group-flush">
+                      {staff.length > 0 ? (
+                        staff.map((s, idx) => (
+                          <li className="list-group-item" key={idx}>
+                            {s.name} - {s.role}
+                          </li>
+                        ))
+                      ) : (
+                        <li className="list-group-item text-muted">No staff currently on duty.</li>
+                      )}
+                    </ul>
+                  </Card.Body>
+                </Card>
               </div>
             </div>
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </DashboardLayout>
   );
 };
+
+const StatCard = ({ title, value, bg = "primary", text = "white" }) => (
+  <div className="col-md-3 col-sm-6">
+    <div className={`card stat-card bg-${bg} text-${text}`}>
+      <div className="card-body">
+        <h5 className="card-title">{title}</h5>
+        <h3>{value}</h3>
+      </div>
+    </div>
+  </div>
+);
 
 export default AdminDashboard;

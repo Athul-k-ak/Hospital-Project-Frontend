@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   FaHome, FaUserMd, FaNotesMedical, FaUserPlus,
   FaCalendarCheck, FaFileInvoiceDollar, FaBars,
-  FaSignOutAlt, FaMoon, FaSun,
+  FaSignOutAlt, FaMoon, FaSun,FaTint
 } from "react-icons/fa";
 import { clearUser } from "../redux/authSlice";
 import "../styles/sidebar.css";
@@ -42,7 +42,7 @@ const Sidebar = () => {
     { path: "/admin/doctor-list", label: "Doctor List", icon: <FaUserMd /> },
     { path: "/admin/patient-report", label: "Patient Report", icon: <FaFileInvoiceDollar /> },
     { path: "/admin/appointment", label: "Appointments", icon: <FaCalendarCheck /> },
-    { path: "/admin/billing", label: "Billing", icon: <FaFileInvoiceDollar /> },
+    { path: "/admin/bloodbank", label: "Blood Bank", icon: <FaFileInvoiceDollar /> },
   ];
 
   const receptionLinks = [
@@ -52,7 +52,8 @@ const Sidebar = () => {
     { path: "/reception/doctor-list", label: "Doctor List", icon: <FaUserMd /> },
     { path: "/reception/appointment", label: "Appointments", icon: <FaCalendarCheck /> },
     { path: "/reception/patient-report", label: "Patient Report", icon: <FaFileInvoiceDollar /> },
-    { path: "/reception/billing", label: "Billing", icon: <FaFileInvoiceDollar /> },
+    { path: "/reception/bloodbank", label: "Blood Bank", icon: <FaTint /> },
+
 
 
   ];
