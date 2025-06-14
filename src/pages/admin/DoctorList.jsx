@@ -3,7 +3,7 @@ import axiosInstance from "../../utils/axiosInstance";
 import { toast } from "react-toastify";
 import DashboardLayout from "../../components/DashboardLayout";
 import { useNavigate } from "react-router-dom";
-import "../../styles/DoctorList.css";
+import "../../styles/doctorList.css";
 
 const DoctorList = () => {
   const [doctors, setDoctors] = useState([]);

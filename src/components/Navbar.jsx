@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { clearUser } from "../redux/authSlice";
-import "../styles/Navbar.css";
+import "../styles/navbar.css";
 
 const Navbar = ({ darkMode, setDarkMode }) => {
   const dispatch = useDispatch();

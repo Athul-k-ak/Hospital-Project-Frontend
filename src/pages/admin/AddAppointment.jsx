@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import "../../styles/AddAppointment.css";
+import "../../styles/addAppointment.css";
 import DashboardLayout from "../../components/DashboardLayout";
 
 const dayMap = {
