@@ -114,6 +114,9 @@ const AppRoutes = () => {
     { path: "/reception/bloodbank/availability", element: <BloodAvailability /> },
     { path: "/reception/bloodbank/stock", element: <BloodStockList /> },
     { path: "/reception/bloodbank/register", element: <RegisterBlood /> },
+
+    { path: "/reception/patientreport/view", element: <ViewReportsPage /> },
+
   ];
 
   const doctorRoutes = [
