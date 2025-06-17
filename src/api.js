@@ -1,11 +1,12 @@
 import axios from "axios";
-import CONFIG from "./config";
+import { API_BASE_URL } from "./config";
 
 // Base API configuration
 const API = axios.create({
-  baseURL: `${CONFIG.BASE_URL}/auth`,
-  withCredentials: true, // Allow cookies to be sent with requests
+  baseURL: `${API_BASE_URL}/auth`,
+  withCredentials: true,
 });
+
 
 // API Calls
 export const login = (credentials) => API.post("/login", credentials);
