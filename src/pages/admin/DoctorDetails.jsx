@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 import { toast } from "react-toastify";
 import DashboardLayout from "../../components/DashboardLayout";
-import "../../styles/DoctorDetails.css";
+import "../../styles/doctorDetails.css";
 
 const DoctorDetails = () => {
   const { id } = useParams();

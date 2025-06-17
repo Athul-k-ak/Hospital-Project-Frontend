@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axiosInstance from "../../utils/axiosInstance";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import "../../styles/PatientRegister.css";
+import "../../styles/patientRegister.css";
 import DashboardLayout from "../../components/DashboardLayout";
 
 const PatientRegister = () => {

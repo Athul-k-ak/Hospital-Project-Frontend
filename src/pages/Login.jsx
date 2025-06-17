@@ -4,7 +4,7 @@ import axios from "axios";
 import { API_BASE_URL } from "../config";
 import { useDispatch } from "react-redux";
 import { setUser } from "../redux/authSlice"; // ⬅️ Make sure this path is correct
-import "../styles/Login.css";
+import "../styles/login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const Login = () => {

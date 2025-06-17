@@ -42,7 +42,7 @@ const Sidebar = () => {
     { path: "/admin/doctor-list", label: "Doctor List", icon: <FaUserMd /> },
     { path: "/admin/patient-report", label: "Patient Report", icon: <FaFileInvoiceDollar /> },
     { path: "/admin/appointment", label: "Appointments", icon: <FaCalendarCheck /> },
-    { path: "/admin/bloodbank", label: "Blood Bank", icon: <FaFileInvoiceDollar /> },
+    { path: "/admin/bloodbank", label: "Blood Bank", icon: <FaTint /> },
   ];
 
   const receptionLinks = [
