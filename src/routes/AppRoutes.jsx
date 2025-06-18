@@ -101,6 +101,8 @@ const AppRoutes = () => {
     { path: "/reception/appointment", element: <AdminAppointment /> },
     { path: "/reception/appointment/book", element: <AddAppointment /> },
     { path: "/reception/view-appointments", element: <ViewAppointments /> },
+    { path: "/reception/appointment/by-doctor", element: <ViewAppointmentsByDoctor /> },
+
     { path: "/reception/doctor-list", element: <DoctorList /> },
     { path: "/reception/doctor-details/:id", element: <DoctorDetails /> },
 
