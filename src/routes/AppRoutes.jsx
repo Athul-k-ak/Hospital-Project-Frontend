@@ -17,6 +17,7 @@ import Register from "../pages/admin/Register";
 import ViewAppointments from "../pages/admin/ViewAppointments";
 import ViewAppointmentsByDoctor from "../pages/admin/ViewAppointmentsByDoctor";
 
+
 // 🧾 Registration Pages
 import RegisterAdmin from "../pages/register/RegisterAdmin";
 import RegisterDoctor from "../pages/register/RegisterDoctor";
@@ -49,6 +50,7 @@ import RegisterBlood from "../pages/BloodBank/RegisterBlood";
 
 // 🎧 Reception Dashboard
 import ReceptionDashboard from "../pages/reception/ReceptionDashboard";
+import StaffList from "../pages/StaffList";
 
 // 🔐 Protected Route Wrapper
 const ProtectedRoute = ({ element, role }) => {
