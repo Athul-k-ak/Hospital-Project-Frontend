@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   FaHome, FaUserMd, FaNotesMedical, FaUserPlus,
   FaCalendarCheck, FaFileInvoiceDollar, FaBars,
-  FaSignOutAlt, FaMoon, FaSun,FaTint
+  FaSignOutAlt, FaMoon, FaSun,FaTint, FaUsers
 } from "react-icons/fa";
 import { clearUser } from "../redux/authSlice";
 import "../styles/sidebar.css";
@@ -43,6 +43,7 @@ const Sidebar = () => {
     { path: "/admin/patient-report", label: "Patient Report", icon: <FaFileInvoiceDollar /> },
     { path: "/admin/appointment", label: "Appointments", icon: <FaCalendarCheck /> },
     { path: "/admin/bloodbank", label: "Blood Bank", icon: <FaTint /> },
+    { path: "/admin/staff/list", label: "Staff", icon: <FaUsers /> },
   ];
 
   const receptionLinks = [
@@ -53,6 +54,9 @@ const Sidebar = () => {
     { path: "/reception/appointment", label: "Appointments", icon: <FaCalendarCheck /> },
     { path: "/reception/patient-report", label: "Patient Report", icon: <FaFileInvoiceDollar /> },
     { path: "/reception/bloodbank", label: "Blood Bank", icon: <FaTint /> },
+    { path: "/reception/staff/list", label: "Staff", icon: <FaUsers /> },
+
+
 
 
 
@@ -81,33 +85,34 @@ const Sidebar = () => {
     setDarkMode(!darkMode);
   };
 
-  return (
-    <div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
-      {/* Header with toggle */}
-      <div className="sidebar-header">
-        <button className="toggle-btn" onClick={() => setCollapsed(!collapsed)}>
-          <FaBars />
-        </button>
-      </div>
+ return (
+  <div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
+  {/* Header with toggle */}
+  <div className="sidebar-header">
+    <button className="toggle-btn" onClick={() => setCollapsed(!collapsed)}>
+      <FaBars />
+    </button>
+  </div>
 
-      {/* Main Links */}
-      <div className="sidebar-content">
-        <ul className="sidebar-links">
-          {links.map((link, index) => (
-            <li key={index} className={location.pathname === link.path ? "active" : ""}>
-              <Link to={link.path}>
-                {link.icon}
-                <span className="link-text">{!collapsed && link.label}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Bottom Buttons */}
-     
+  {/* Scrollable area starts here */}
+  <div className="sidebar-scroll">
+    <div className="sidebar-content">
+      <ul className="sidebar-links">
+        {links.map((link, index) => (
+          <li key={index} className={location.pathname === link.path ? "active" : ""}>
+            <Link to={link.path}>
+              {link.icon}
+              <span className="link-text">{!collapsed && link.label}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
-  );
+  </div>
+</div>
+
+);
+
 };
 
 export default Sidebar;
