@@ -62,7 +62,7 @@ import StaffList from "../pages/StaffList";
 // 🔁 Shared
 import PaymentPage from "../pages/PaymentPage";
 import PayAppointmentBill from "../pages/Billing/PayAppointmentBill";
-import OpSheetPrint from "../pages/appointments/OpSheetPrint";
+
 import DoctorFeeManagement from "../pages/DoctorFeeManagement";
 
 // 🎯 Route Mapping Helpers
@@ -101,7 +101,7 @@ const adminRoutes = [
   { path: "/admin/bloodbank/register", element: <RegisterBlood /> },
   { path: "/admin/staff/list", element: <StaffList /> },
   { path: "/admin/billing/pay/:appointmentId", element: <PayAppointmentBill /> },
-  { path: "/admin/appointment/op-sheet/:appointmentId", element: <OpSheetPrint /> },
+
   { path: "/admin/doctor/fees", element: <DoctorFeeManagement /> },
 ];
 
