@@ -33,13 +33,13 @@ const BloodBankHome = () => {
             <Card className="shadow-sm h-100">
               <Card.Body className="d-flex flex-column justify-content-between">
                 <div>
-                  <Card.Title>View Blood Stock</Card.Title>
+                  <Card.Title>View Blood Donor Details</Card.Title>
                   <Card.Text>
                     See the total available blood units grouped by blood type and view donors.
                   </Card.Text>
                 </div>
                 <Button variant="danger" onClick={() => navigate("stock")}>
-                  View Stock
+                  View Details
                 </Button>
               </Card.Body>
             </Card>
