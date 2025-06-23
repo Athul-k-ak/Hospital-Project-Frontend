@@ -46,7 +46,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
   return (
     <nav className="navbar">
       <div className="navbar-left">
-        <h2 className="brand-name">KRL Health Care</h2>
+        <h2 className="brand-name">AK Hospital</h2>
       </div>
 
       <div className="navbar-right">

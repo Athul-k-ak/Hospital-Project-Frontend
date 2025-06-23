@@ -4,28 +4,25 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   FaHome, FaUserMd, FaNotesMedical, FaUserPlus,
   FaCalendarCheck, FaFileInvoiceDollar, FaBars,
-  FaSignOutAlt, FaMoon, FaSun,FaTint, FaUsers
+  FaSignOutAlt, FaMoon, FaSun, FaTint, FaUsers
 } from "react-icons/fa";
 import { clearUser } from "../redux/authSlice";
-import "../styles/sidebar.css";
 import { toast } from "react-toastify";
+import "../styles/sidebar.css";
 
 const Sidebar = () => {
-  const user = useSelector((state) => state.auth.user);
-  const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const user = useSelector((state) => state.auth.user);
 
   const [collapsed, setCollapsed] = useState(window.innerWidth <= 768);
   const [darkMode, setDarkMode] = useState(
     document.documentElement.getAttribute("data-bs-theme") === "dark"
   );
 
-  // Collapse on small screens
   useEffect(() => {
-    const handleResize = () => {
-      setCollapsed(window.innerWidth <= 768);
-    };
+    const handleResize = () => setCollapsed(window.innerWidth <= 768);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -34,6 +31,7 @@ const Sidebar = () => {
 
   const { role } = user;
 
+  // Sidebar Links
   const adminLinks = [
     { path: "/admin-dashboard", label: "Home", icon: <FaHome /> },
     { path: "/admin/register", label: "Register", icon: <FaUserPlus /> },
@@ -55,11 +53,6 @@ const Sidebar = () => {
     { path: "/reception/patient-report", label: "Patient Report", icon: <FaFileInvoiceDollar /> },
     { path: "/reception/bloodbank", label: "Blood Bank", icon: <FaTint /> },
     { path: "/reception/staff/list", label: "Staff", icon: <FaUsers /> },
-
-
-
-
-
   ];
 
   const doctorLinks = [
@@ -68,10 +61,7 @@ const Sidebar = () => {
     { path: "/doctor/patient-reports", label: "Patient Reports", icon: <FaNotesMedical /> },
   ];
 
-  const links =
-    role === "admin" ? adminLinks :
-    role === "reception" ? receptionLinks :
-    doctorLinks;
+  const links = role === "admin" ? adminLinks : role === "reception" ? receptionLinks : doctorLinks;
 
   const handleLogout = () => {
     dispatch(clearUser());
@@ -85,34 +75,32 @@ const Sidebar = () => {
     setDarkMode(!darkMode);
   };
 
- return (
-  <div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
-  {/* Header with toggle */}
-  <div className="sidebar-header">
-    <button className="toggle-btn" onClick={() => setCollapsed(!collapsed)}>
-      <FaBars />
-    </button>
-  </div>
+  return (
+    <div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
+      {/* Header */}
+      <div className="sidebar-header">
+        <button className="toggle-btn" onClick={() => setCollapsed(!collapsed)}>
+          <FaBars />
+        </button>
+      </div>
 
-  {/* Scrollable area starts here */}
-  <div className="sidebar-scroll">
-    <div className="sidebar-content">
-      <ul className="sidebar-links">
-        {links.map((link, index) => (
-          <li key={index} className={location.pathname === link.path ? "active" : ""}>
-            <Link to={link.path}>
-              {link.icon}
-              <span className="link-text">{!collapsed && link.label}</span>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      {/* Links */}
+      <div className="sidebar-scroll">
+        <div className="sidebar-content">
+          <ul className="sidebar-links">
+            {links.map((link, index) => (
+              <li key={index} className={location.pathname === link.path ? "active" : ""}>
+                <Link to={link.path}>
+                  {link.icon}
+                  <span className="link-text">{!collapsed && link.label}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-
-);
-
+  );
 };
 
 export default Sidebar;

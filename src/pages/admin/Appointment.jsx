@@ -15,28 +15,40 @@ const Appointment = () => {
     : "/doctor";
 
   const cards = [
-    {
-      title: "Add Appointment",
-      desc: "Schedule a new appointment for patients.",
-      btnText: "Add",
-      route: `${baseRoute}/appointment/book`,
-      color: "primary",
-    },
-    {
-      title: "View All Appointments",
-      desc: "See the list of all scheduled appointments.",
-      btnText: "View All",
-      route: `${baseRoute}/view-appointments`,
-      color: "success",
-    },
-    {
-      title: "Appointments by Doctor",
-      desc: "Filter appointments based on doctor.",
-      btnText: "Filter",
-      route: `${baseRoute}/appointment/by-doctor`,
-      color: "info",
-    },
-  ];
+  {
+    title: "Add Appointment",
+    desc: "Schedule a new appointment for patients.",
+    btnText: "Add",
+    route: `${baseRoute}/appointment/book`,
+    color: "primary",
+  },
+  {
+    title: "View All Appointments",
+    desc: "See the list of all scheduled appointments.",
+    btnText: "View All",
+    route: `${baseRoute}/view-appointments`,
+    color: "success",
+  },
+  {
+    title: "Appointments by Doctor",
+    desc: "Filter appointments based on doctor.",
+    btnText: "Filter",
+    route: `${baseRoute}/appointment/by-doctor`,
+    color: "info",
+  },
+  ...(user?.role !== "reception"
+    ? [
+        {
+          title: "Doctor Fee Management",
+          desc: "Update or view consultation fees for doctors.",
+          btnText: "Manage Fees",
+          route: `${baseRoute}/doctor/fees`,
+          color: "warning",
+        },
+      ]
+    : []),
+];
+
 
   return (
     <DashboardLayout>

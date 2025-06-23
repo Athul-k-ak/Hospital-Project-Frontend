@@ -1,96 +1,117 @@
-// src/pages/BillingPayment.jsx
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import axiosInstance from "../utils/axiosInstance";
+import { toast } from "react-toastify";
 import DashboardLayout from "../components/DashboardLayout";
-import toast from "react-hot-toast";
 
 const PaymentPage = () => {
-  const { billingId } = useParams();
+  const { appointmentId } = useParams();
+  const { token } = useSelector(state => state.auth);
   const navigate = useNavigate();
-  const [billing, setBilling] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [appointment, setAppointment] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchBilling = async () => {
-      try {
-        const res = await axiosInstance.get(`/billing/${billingId}`);
-        setBilling(res.data.billing);
-      } catch (err) {
-        console.error(err);
-        toast.error("Failed to load billing data");
-      } finally {
-        setLoading(false);
-      }
-    };
+    axiosInstance.get(`/payment/${appointmentId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    .then(res => setAppointment(res.data.appointment))
+    .catch(err => {
+      toast.error("Failed to fetch appointment");
+      console.error(err);
+    });
+  }, [appointmentId, token]);
 
-    fetchBilling();
-  }, [billingId]);
-
-  useEffect(() => {
+  const loadRazorpay = () => new Promise(res => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
-    script.async = true;
+    script.onload = () => res(true);
+    script.onerror = () => res(false);
     document.body.appendChild(script);
-  }, []);
+  });
 
-  const handlePayment = async () => {
-    try {
-      const res = await axiosInstance.post("/payment/order", {
-        billingId,
-      });
+ const handlePayment = async () => {
+  if (!appointment) return;
+  const ok = await loadRazorpay();
+  if (!ok) return toast.error("Failed to load Razorpay SDK");
 
-      const { order } = res.data;
+  setLoading(true);
+  try {
+    const { data } = await axiosInstance.post(
+      "/payment/create-order",
+      { appointmentId },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
 
-      const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-        amount: order.amount,
-        currency: "INR",
-        name: "Hospital Billing",
-        description: billing.details,
-        order_id: order.id,
-        handler: async (response) => {
-          try {
-            await axiosInstance.post("/payment/verify", {
-              billingId,
-              ...response,
-            });
+    const options = {
+      key: data.key,
+      amount: data.amount,
+      currency: data.currency,
+      name: "Hospital Booking",
+      description: `Fee for Dr. ${appointment.doctor.name}`,
+      order_id: data.orderId,
+      
+     handler: async response => {
+      try {
+        const result = await axiosInstance.post("/payment/verify-payment", {
+          appointmentId,
+          razorpay_order_id: response.razorpay_order_id,
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_signature: response.razorpay_signature
+        }, { headers: { Authorization: `Bearer ${token}` } });
 
-            toast.success("Payment successful!");
-            navigate(`/billing/${billingId}`);
-          } catch (err) {
-            console.error(err);
-            toast.error("Payment verification failed");
-          }
+        toast.success("Payment completed");
+        navigate(`/admin/billing/details/${result.data.billingId}`);
+      } catch (err) {
+        toast.error("Payment verification failed");
+        console.error("Payment verification error:", err);
+      }
+    },
+
+      prefill: {
+        name: appointment.patient.name,
+        contact: appointment.patient.phone,
+      },
+      theme: { color: "#0d6efd" },
+      modal: {
+        ondismiss: () => {
+          window.location.reload(); // ✅ Refresh auth state if modal is dismissed
         },
-        theme: { color: "#0d6efd" },
-      };
+      },
+    };
 
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-    } catch (err) {
-      console.error(err);
-      toast.error("Payment error");
-    }
-  };
+    new window.Razorpay(options).open();
+  } catch (err) {
+    toast.error("Payment initiation failed");
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <DashboardLayout>
-      <div className="container py-4">
-        <h4>Pay Bill</h4>
-        {loading ? (
-          <p>Loading billing details...</p>
-        ) : billing ? (
-          <div className="card p-3">
-            <h5>Patient ID: {billing.patientId?.name || billing.patientId}</h5>
-            <p>Amount: ₹{billing.amount}</p>
-            <p>Details: {billing.details}</p>
-            <button className="btn btn-success mt-3" onClick={handlePayment}>
-              Pay Now
+      <div className="container py-5">
+        <h3>Pay Appointment Fee</h3>
+        {!appointment ? (
+          <p>Loading appointment...</p>
+        ) : (
+          <div className="card p-4 mx-auto shadow" style={{ maxWidth: 600 }}>
+            <h5>Doctor: {appointment?.doctor?.name || "N/A"}</h5>
+            <p>Specialty: {appointment?.doctor?.specialty || "Not available"}</p>
+            <p>Date: {appointment.date} | Time: {appointment.time}</p>
+            <h4 className="mt-4">Amount: ₹{appointment.fee || appointment?.doctor?.fee || "Not set"}</h4>
+
+            <button
+              disabled={loading || appointment.paymentStatus === "Paid"}
+              onClick={handlePayment}
+              className="btn btn-success mt-3"
+            >
+              {appointment.paymentStatus === "Paid" ? "Paid" : (loading ? "Processing..." : "Pay Now")}
             </button>
           </div>
-        ) : (
-          <p>Billing not found</p>
+
         )}
       </div>
     </DashboardLayout>

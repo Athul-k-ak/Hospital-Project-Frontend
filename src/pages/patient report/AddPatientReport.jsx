@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 import { toast } from "react-toastify";
+import Select from "react-select";
 
 const AddPatientReport = () => {
   const { user } = useSelector((state) => state.auth);
@@ -29,20 +30,30 @@ const AddPatientReport = () => {
     }
   }, [user, navigate]);
 
-  useEffect(() => {
-    const fetchPatients = async () => {
-      try {
-        const res = await axiosInstance.get("/patient");
-        // Uncomment for debugging if needed
-        // console.log("Fetched patients:", res.data);
-        setPatients(Array.isArray(res.data.patients) ? res.data.patients : res.data);
-      } catch (error) {
-        toast.error("Failed to load patients");
-        console.error(error);
+useEffect(() => {
+  const fetchPatients = async () => {
+    try {
+      const url = isDoctor ? "/patient/doctor-patients" : "/patient";
+      const res = await axiosInstance.get(url);
+
+      // ✅ handle response structure differences
+      if (isAdmin && Array.isArray(res.data.patients)) {
+        setPatients(res.data.patients);
+      } else if (isDoctor && Array.isArray(res.data)) {
+        setPatients(res.data);
+      } else {
+        setPatients([]);
+        toast.warn("No patients found.");
       }
-    };
-    fetchPatients();
-  }, []);
+    } catch (error) {
+      toast.error("Failed to load patients");
+      console.error("Fetch error:", error);
+    }
+  };
+
+  fetchPatients();
+}, [user, isDoctor, isAdmin]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -89,6 +100,11 @@ const AddPatientReport = () => {
     }
   };
 
+  const patientOptions = patients.map((p) => ({
+    value: p._id,
+    label: `${p.name} (${p.age} yrs, ${p.gender})`
+  }));
+
   return (
     <DashboardLayout>
       <div className="container py-4">
@@ -97,23 +113,14 @@ const AddPatientReport = () => {
         <form className="row g-3" onSubmit={handleSubmit}>
           <div className="col-md-6">
             <label className="form-label">Select Patient</label>
-            <select
-              className="form-select"
-              value={selectedPatientId}
-              onChange={(e) => setSelectedPatientId(e.target.value)}
-              required
-            >
-              <option value="">-- Select a patient --</option>
-              {patients.length > 0 ? (
-                patients.map((p) => (
-                  <option key={p._id} value={p._id}>
-                    {p.name} ({p.age} yrs, {p.gender})
-                  </option>
-                ))
-              ) : (
-                <option disabled>No patients found</option>
-              )}
-            </select>
+            <Select
+              options={patientOptions}
+              value={patientOptions.find((opt) => opt.value === selectedPatientId) || null}
+              onChange={(selected) => setSelectedPatientId(selected ? selected.value : "")}
+              isSearchable
+              placeholder="Search or select a patient..."
+              isClearable
+            />
           </div>
 
           <div className="col-12">

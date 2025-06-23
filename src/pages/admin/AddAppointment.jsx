@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 import { toast } from "react-toastify";
 import Select from "react-select";
@@ -20,6 +21,9 @@ const dayMap = {
 
 const AddAppointment = () => {
   const { token } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const confirmedAppointmentId = searchParams.get("confirmed");
 
   const [doctors, setDoctors] = useState([]);
   const [patients, setPatients] = useState([]);
@@ -41,12 +45,17 @@ const AddAppointment = () => {
     },
   });
 
+  // 🔹 Fetch doctors and patients
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [doctorRes, patientRes] = await Promise.all([
-          axiosInstance.get("/doctor"),
-          axiosInstance.get("/patient"),
+          axiosInstance.get("/doctor", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axiosInstance.get("/patient", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
         ]);
         setDoctors(doctorRes.data || []);
         setPatients(patientRes.data.patients || []);
@@ -57,8 +66,44 @@ const AddAppointment = () => {
     };
 
     fetchData();
-  }, []);
+  }, [token]);
 
+  // 🔹 Fetch confirmed appointment details
+  useEffect(() => {
+    const fetchConfirmedAppointment = async () => {
+      if (!confirmedAppointmentId) return;
+      try {
+        const res = await axiosInstance.get(`/appointment/${confirmedAppointmentId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setBookingDetails(res.data.appointment);
+        toast.success("Appointment payment successful");
+
+        // Clear the form
+        setForm({
+          doctorId: "",
+          patientId: "",
+          date: null,
+          time: "",
+          newPatient: {
+            name: "",
+            age: "",
+            gender: "",
+            phone: "",
+            place: "",
+          },
+        });
+        setAvailableTimeSlots([]);
+      } catch (err) {
+        toast.error("Failed to load confirmed appointment");
+        console.error(err);
+      }
+    };
+
+    fetchConfirmedAppointment();
+  }, [confirmedAppointmentId, token]);
+
+  // 🔹 Update time slots based on doctor and date
   useEffect(() => {
     const updateTimeSlots = () => {
       if (!form.doctorId || !form.date) return setAvailableTimeSlots([]);
@@ -141,23 +186,8 @@ const AddAppointment = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      toast.success(res.data.message || "Appointment booked");
-      setBookingDetails(res.data.appointment);
-
-      setForm({
-        doctorId: "",
-        patientId: "",
-        date: null,
-        time: "",
-        newPatient: {
-          name: "",
-          age: "",
-          gender: "",
-          phone: "",
-          place: "",
-        },
-      });
-      setAvailableTimeSlots([]);
+      const appointmentId = res.data.appointment._id;
+      navigate(`/payment/${appointmentId}`);
     } catch (err) {
       console.error("Booking failed:", err);
       toast.error(err.response?.data?.message || "Booking failed");
@@ -185,10 +215,7 @@ const AddAppointment = () => {
     return availableDays.includes(dayName);
   };
 
-  // Get doctor name from ID
   const getDoctorName = (id) => doctors.find((doc) => doc._id === id)?.name || "N/A";
-
-  // Get patient info from ID
   const getPatientInfo = (id) => patients.find((pat) => pat._id === id) || {};
 
   return (
@@ -215,9 +242,7 @@ const AddAppointment = () => {
               selected={form.date}
               onChange={(date) => setForm((prev) => ({ ...prev, date }))}
               className="form-control"
-              placeholderText={
-                form.doctorId ? "Select available date" : "Select doctor first"
-              }
+              placeholderText={form.doctorId ? "Select available date" : "Select doctor first"}
               filterDate={isDateAvailable}
               dateFormat="yyyy-MM-dd"
               minDate={new Date()}
@@ -330,7 +355,6 @@ const AddAppointment = () => {
           </div>
         </form>
 
-        {/* ✅ Booking Summary */}
         {bookingDetails && (
           <div className="appointment-summary mt-5 p-4 border rounded shadow bg-light">
             <h5 className="text-success mb-3">✅ Appointment Confirmed</h5>
@@ -339,6 +363,8 @@ const AddAppointment = () => {
             <p><strong>Phone:</strong> {bookingDetails.patient?.phone || getPatientInfo(bookingDetails.patientId).phone || "N/A"}</p>
             <p><strong>Date:</strong> {new Date(bookingDetails.date).toLocaleDateString()}</p>
             <p><strong>Time:</strong> {bookingDetails.time || "Auto Assigned"}</p>
+            <p><strong>Fee Paid:</strong> ₹{bookingDetails.fee || "N/A"}</p>
+            <p><strong>Payment Status:</strong> <span className="badge bg-success">{bookingDetails.paymentStatus || "Paid"}</span></p>
           </div>
         )}
       </div>
