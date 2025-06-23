@@ -63,14 +63,14 @@ const DoctorDashboard = () => {
               </Card>
             </Col>
 
-            <Col md={4}>
+            {/* <Col md={4}>
               <Card className="shadow-sm rounded-4 border-0">
                 <Card.Body>
                   <h6 className="text-muted">Reports Submitted</h6>
                   <h2 className="fw-bold text-secondary">Coming Soon</h2>
                 </Card.Body>
               </Card>
-            </Col>
+            </Col> */}
           </Row>
         )}
       </Container>
